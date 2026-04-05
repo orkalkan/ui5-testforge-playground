@@ -173,7 +173,6 @@ sap.ui.define([
         selectedCategory: categories[0],
         selectedComponent: categories[0].components[0],
         favorites: [],
-        panels: { formControls: true, buttons: false, status: false, avatar: false, dialogs: false, objectPage: false },
         demo: {
           inputValue: "",
           passwordValue: "",
@@ -204,10 +203,8 @@ sap.ui.define([
     onCategoryPress(event) {
       const index = parseInt(event.getSource().data("categoryIndex"), 10);
       const model = this.getView().getModel("playground");
-      const category = model.getProperty("/categories/" + index);
-      model.setProperty("/selectedCategory", category);
+      model.setProperty("/selectedCategory", model.getProperty("/categories/" + index));
 
-      // Lists & Tables → dedicated TableControls page
       if (index === 2) {
         this.getOwnerComponent().getRouter().navTo("tableControls");
         return;
@@ -220,22 +217,10 @@ sap.ui.define([
       const key = event.getSource().data("componentKey");
       const model = this.getView().getModel("playground");
       const found = model.getProperty("/allComponents").find(c => c.key === key);
-      if (!found) return;
-
-      model.setProperty("/selectedComponent", found);
-
-      // Set panel visibility based on component category
-      const cat = found.category;
-      model.setProperty("/panels", {
-        formControls: ["Form Controls", "Sliders & Range", "Tokens & Tags", "Upload & Files"].includes(cat),
-        buttons:      ["Buttons & Actions", "Navigation"].includes(cat),
-        status:       ["Feedback & Alerts", "Object Display", "Data Visualization"].includes(cat),
-        avatar:       cat === "Object Display",
-        dialogs:      ["Dialogs & Popovers"].includes(cat),
-        objectPage:   ["Object Pages", "Wizard & Steps", "Cards (sap.f)", "Charts"].includes(cat),
-      });
-
-      this.byId("playgroundNav").to(this.byId("componentDetail"));
+      if (found) {
+        model.setProperty("/selectedComponent", found);
+        this.byId("playgroundNav").to(this.byId("componentDetail"));
+      }
     },
 
     onFavoritePress(event) {
@@ -284,6 +269,10 @@ sap.ui.define([
 
       model.setProperty("/selectedCategory", { name: 'Results for "' + query + '"', components: matched });
       this.byId("playgroundNav").to(this.byId("categoryPage"));
+    },
+
+    onSearchLive(event) {
+      this.onSearchComponents(event);
     },
 
     onNavToFavorites() {
