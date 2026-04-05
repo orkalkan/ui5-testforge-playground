@@ -137,6 +137,10 @@ sap.ui.define([
       this._appendLog(`TT-E-001 toggleOpenState: rowIndex=${rowIndex}, expanded=${expanded}`);
     },
 
+    onNavBack() {
+      this.getOwnerComponent().getRouter().navTo("playground");
+    },
+
     onClearLog() {
       this.byId("tbl-events-log").setValue("");
     },

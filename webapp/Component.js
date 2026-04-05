@@ -11,12 +11,12 @@ sap.ui.define(["sap/ui/core/UIComponent"], (UIComponent) => {
     },
 
     _onRouteMatched(event) {
-      const routeName = event.getParameter("name");
-      const isAuthenticated = !!sessionStorage.getItem("fira_auth");
-
-      if (routeName !== "login" && !isAuthenticated) {
-        this.getRouter().navTo("login", {}, true);
-      }
+      // AUTH DISABLED for local testing — re-enable by restoring the block below
+      // const routeName = event.getParameter("name");
+      // const isAuthenticated = !!sessionStorage.getItem("fira_auth");
+      // if (routeName !== "login" && !isAuthenticated) {
+      //   this.getRouter().navTo("login", {}, true);
+      // }
     }
 
   });
